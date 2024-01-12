@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Form</title>
+
+    <!-- External library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+    <!-- Styles -->
+    <style>
+        body {
+            background-color: #F1F1F1;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #mainContainer {
+            width: 980px;
+            background-color: #FFF;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Added margin to separate form and button */
+            display: inline-block; /* Display form as inline-block */
+        }
+
+        form {
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #pdfButtonContainer {
+            display: inline-block; /* Display button container as inline-block */
+            padding: 0px 0px 20px 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Container -->
+    <div id="mainContainer">
+        <!-- Form Section -->
+        <form id="pdfForm">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName">
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+        </form>
+
+        <!-- Button Section -->
+        <div id="pdfButtonContainer">
+            <button type="button" onclick="generatePDF()">Generate PDF</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // Event listener for receiving data from another window
+        window.onmessage = (event) => {
+            if (event.data) {
+                console.log("event.data: ", event.data);
+                let receivedData = event.data;
+
+                // Populate form fields with received data
+                document.getElementById("firstName").value = receivedData.firstName;
+                document.getElementById("lastName").value = receivedData.lastName;
+                document.getElementById("email").value = receivedData.email;
+            }
+        };
+
+        // Function to generate PDF
+        function generatePDF() {
+            var element = document.getElementById('pdfForm');
+            var pdfOptions = {
+                margin: 0,
+                filename: 'portfolioData.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 1 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(pdfOptions).from(element).save();
+        }
+    </script>
+</body>
+
+</html>
